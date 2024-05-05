@@ -3,6 +3,7 @@ from time import sleep
 
 CHANNEL_ID = "UCpj_nD9850tykDqIrjtIXdg"
 
+# 現状、最新の動画のID
 last_vid = ["bv9ondE2rpg"]
 
 while True:
@@ -11,6 +12,7 @@ while True:
   videoID = d.entries[0].yt_videoid
   print(videoID,d.entries[0]["title"])
 
+  # 動画IDを比較
   if videoID not in last_vid:
     break
   sleep(5)
