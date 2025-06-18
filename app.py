@@ -109,7 +109,4 @@ pyautogui.click(x=682, y=960)
 time.sleep(5)
 print("コメントを投稿しました！")
 
-# 投稿済IDを記録
-last_vid.append(videoID)
-
 driver.quit()
