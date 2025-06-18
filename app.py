@@ -1,58 +1,115 @@
-import feedparser
 import pyautogui
 import pyperclip
+import feedparser
+import tempfile
 import time
 from time import sleep
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 
+# ---------- 設定 ----------
+CHANNEL_ID = "UCvMVMPFJKbn2JztHP-jYpaA"
+COMMENT_TEXT = "素晴らしい動画でした！"
+CHROME_PROFILE_PATH = "/Users/kumagai/Library/Application Support/Google/Chrome"
+CHROME_PROFILE_NAME = "Default"
+CHROMEDRIVER_PATH = "/Users/kumagai/Desktop/Python/combot/tools/chromedriver"
 
-# 動画検知 -----------------------------------
+# ---------- Chrome 設定 ----------
+options = Options()
+options.add_experimental_option("excludeSwitches", ["enable-automation"])
+options.add_experimental_option("useAutomationExtension", False)
+options.add_argument("--disable-blink-features=AutomationControlled")
 
-# CHANNEL_ID = "UCpj_nD9850tykDqIrjtIXdg"
+# ---------- 最新動画のチェック ----------
+feed_url = f"https://www.youtube.com/feeds/videos.xml?channel_id={CHANNEL_ID}"
+d = feedparser.parse(feed_url)
+last_video_id = d.entries[0].yt_videoid
+print("初回検出された動画ID:", last_video_id)
 
-# # 現状、最新の動画のID
-# last_vid = ["bv9ondE2rpg"]
+# 新しい動画が出るまで監視
+while True:
+    d = feedparser.parse(feed_url)
+    current_video_id = d.entries[0].yt_videoid
+    video_title = d.entries[0]["title"]
+    print("現在の動画:", video_title, current_video_id)
 
-# while True:
-#   url = "https://www.youtube.com/feeds/videos.xml?channel_id={}".format(CHANNEL_ID)
-#   d = feedparser.parse(url)
-  # videoID = d.entries[0].yt_videoid
-#   print(videoID,d.entries[0]["title"])
+    if current_video_id != last_video_id:
+        print("🎬 新しい動画を検出しました。処理を開始します...")
+        break
 
-#   # 動画IDを比較
-#   if videoID not in last_vid:
-#     break
-#   sleep(5)
+    sleep(10)
 
-# pyAutoGUI ------------------------------------------- 
-driver_path="/Users/kumagai/Desktop/combot/tools/chromedriver"
-service = Service(executable_path=driver_path)
-driver = webdriver.Chrome(service=service)
+#----------- chromeにログイン -------------------
+service = Service(CHROMEDRIVER_PATH)
+driver = webdriver.Chrome(service=service, options=options)
 
-# Googleの検索ページを開く
-videoID = "https://youtube.com/watch?v=GSqOaaNi2ZM"
-url = 'https://www.google.com'
-driver.get(url)
+# アドレスバーを選択し、Googleログインページにアクセス
+pyautogui.keyDown("command")
+pyautogui.keyDown("l")
+pyautogui.keyUp("command")
+pyautogui.keyUp("l")
+time.sleep(0.5)
 
-time.sleep(1)
+pyperclip.copy("https://accounts.google.com/ServiceLogin")
+pyautogui.hotkey("command", "v")
+pyautogui.press("enter")
+time.sleep(3)
 
-# GUI
+pyautogui.click(x=705, y=478)
+time.sleep(3)
+pyperclip.copy("ppeni2976@gmail.com")
+pyautogui.hotkey("command", "v")
+pyautogui.press("enter")
+time.sleep(5)
+pyautogui.click(x=970, y=702)
+time.sleep(5)
+pyautogui.click(x=620, y=616)
+time.sleep(10)
+pyautogui.click(x=982, y=457)
+time.sleep(5)
+
+# ---------- YouTube動画ページへアクセス ----------
+video_url = "https://www.youtube.com/watch?v=gMkJ5ZIoRBQ"
 
 pyautogui.keyDown("command")
 pyautogui.keyDown("l")
 pyautogui.keyUp("command")
 pyautogui.keyUp("l")
-time.sleep(1)
+time.sleep(0.5)
 
-pyperclip.copy(videoID)
-time.sleep(1)
+pyperclip.copy(video_url)
+time.sleep(0.5)
 
-pyautogui.hotkey('command', 'v')
-time.sleep(1)
+pyautogui.hotkey("command", "v")
+time.sleep(0.5)
 
-pyautogui.hotkey('enter')
-time.sleep(1)
+pyautogui.press("enter")
+time.sleep(10)
 
-pyautogui.moveTo(100,500)
+# ---------- コメント欄にコメントを入力 ----------
+
+# コメント入力欄をクリック
+pyautogui.click(x=159, y=921)
 time.sleep(5)
+
+pyautogui.click(x=159, y=921)
+time.sleep(5)
+
+# 実際のコメント入力欄を取得し、コメントを入力
+pyperclip.copy(COMMENT_TEXT)
+time.sleep(0.5)
+
+pyautogui.hotkey("command", "v")
+time.sleep(0.5)
+
+# 投稿ボタンを押す
+pyautogui.click(x=682, y=960)
+time.sleep(5)
+print("コメントを投稿しました！")
+
+# 投稿済IDを記録
+last_vid.append(videoID)
+
+driver.quit()
