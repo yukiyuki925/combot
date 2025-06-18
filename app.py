@@ -11,7 +11,7 @@ from selenium.webdriver.common.by import By
 
 # ---------- 設定 ----------
 CHANNEL_ID = "UCvMVMPFJKbn2JztHP-jYpaA"
-COMMENT_TEXT = "素晴らしい動画でした！"
+COMMENT_TEXT = "応援してます！"
 CHROME_PROFILE_PATH = "/Users/kumagai/Library/Application Support/Google/Chrome"
 CHROME_PROFILE_NAME = "Default"
 CHROMEDRIVER_PATH = "/Users/kumagai/Desktop/Python/combot/tools/chromedriver"
@@ -36,7 +36,7 @@ while True:
     print("現在の動画:", video_title, current_video_id)
 
     if current_video_id != last_video_id:
-        print("🎬 新しい動画を検出しました。処理を開始します...")
+        print("新しい動画を検出しました。処理を開始します...")
         break
 
     sleep(10)
@@ -71,7 +71,7 @@ pyautogui.click(x=982, y=457)
 time.sleep(5)
 
 # ---------- YouTube動画ページへアクセス ----------
-video_url = "https://www.youtube.com/watch?v=gMkJ5ZIoRBQ"
+video_url = f"https://www.youtube.com/watch?v={current_video_id}"
 
 pyautogui.keyDown("command")
 pyautogui.keyDown("l")
